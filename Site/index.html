@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulário de Cadastro</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .container {
+            background-color: #fff;
+            padding: 30px 40px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 450px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 25px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="date"],
+        input[type="number"] {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"]:focus,
+        input[type="date"]:focus,
+        input[type="number"]:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+        }
+
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #0056b3;
+        }
+        
+        .message {
+            margin-top: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        .message.success {
+            color: green;
+        }
+        .message.error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Formulário de Cadastro</h2>
+        <form id="cadastroForm">
+            <div class="form-group">
+                <label for="nome">Nome Completo</label>
+                <input type="text" id="nome" name="nome" placeholder="Digite seu nome completo" required>
+            </div>
+
+            <div class="form-group">
+                <label for="data-nascimento">Data de Nascimento</label>
+                <input type="date" id="data-nascimento" name="data-nascimento" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cartao-sus">Número do Cartão SUS</label>
+                <input type="text" id="cartao-sus" name="cartao-sus" placeholder="Ex: 123456789101112" pattern="\d{15}" title="O Cartão SUS deve conter 15 dígitos" required>
+            </div>
+
+            <div class="form-group">
+                <label for="cidade">Cidade</label>
+                <input type="text" id="cidade" name="cidade" placeholder="Digite sua cidade" required>
+            </div>
+
+            <button type="submit">Enviar</button>
+            <div id="statusMessage" class="message"></div>
+        </form>
+    </div>
+
+    <script>
+        const form = document.getElementById('cadastroForm');
+        const statusMessage = document.getElementById('statusMessage');
+
+        form.addEventListener('submit', async (e) => {
+            e.preventDefault(); // Impede o envio padrão do formulário
+            statusMessage.textContent = 'Enviando...';
+            statusMessage.className = 'message';
+
+            const formData = new FormData(form);
+            const data = Object.fromEntries(formData.entries());
+
+            // A URL da sua API do SheetDB
+            const sheetdbURL = "https://sheetdb.io/api/v1/67yjpanniamkb"; 
+
+            try {
+                const response = await fetch(sheetdbURL, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({ data })
+                });
+
+                if (response.ok) {
+                    statusMessage.textContent = 'Dados enviados com sucesso!';
+                    statusMessage.className = 'message success';
+                    form.reset(); // Limpa o formulário
+                } else {
+                    throw new Error('Erro ao enviar os dados. Por favor, tente novamente.');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                statusMessage.textContent = 'Erro ao enviar os dados. Verifique a URL da API.';
+                statusMessage.className = 'message error';
+            }
+        });
+    </script>
+</body>
+</html>

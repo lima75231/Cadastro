@@ -123,42 +123,42 @@
     </div>
 
     <script>
-        const form = document.getElementById('cadastroForm');
-        const statusMessage = document.getElementById('statusMessage');
+    const form = document.getElementById('cadastroForm');
+    const statusMessage = document.getElementById('statusMessage');
 
-        form.addEventListener('submit', async (e) => {
-            e.preventDefault(); // Impede o envio padrão do formulário
-            statusMessage.textContent = 'Enviando...';
-            statusMessage.className = 'message';
+    form.addEventListener('submit', async (e) => {
+        e.preventDefault();
 
-            const formData = new FormData(form);
-            const data = Object.fromEntries(formData.entries());
+        statusMessage.textContent = 'Enviando...';
+        statusMessage.className = 'message';
 
-            // A URL da sua API do SheetDB
-            const sheetdbURL = "https://sheetdb.io/api/v1/67yjpanniamkb"; 
+        const formData = new FormData(form);
+        const data = Object.fromEntries(formData.entries());
 
-            try {
-                const response = await fetch(sheetdbURL, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
-                    body: JSON.stringify({ data })
-                });
+        const sheetdbURL = "https://sheetdb.io/api/v1/ptbcohvi7xcj0"; // sua API
 
-                if (response.ok) {
-                    statusMessage.textContent = 'Dados enviados com sucesso!';
-                    statusMessage.className = 'message success';
-                    form.reset(); // Limpa o formulário
-                } else {
-                    throw new Error('Erro ao enviar os dados. Por favor, tente novamente.');
-                }
-            } catch (error) {
-                console.error('Erro:', error);
-                statusMessage.textContent = 'Erro ao enviar os dados. Verifique a URL da API.';
-                statusMessage.className = 'message error';
+        try {
+            const response = await fetch(sheetdbURL, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ data: data })
+            });
+
+            if (response.ok) {
+                statusMessage.textContent = '✅ Dados enviados com sucesso!';
+                statusMessage.className = 'message success';
+                form.reset();
+            } else {
+                throw new Error('Erro ao enviar os dados');
             }
-        });
-    </script>
+        } catch (error) {
+            console.error('Erro:', error);
+            statusMessage.textContent = '❌ Erro ao enviar os dados. Verifique a URL da API.';
+            statusMessage.className = 'message error';
+        }
+    });
+</script>
 </body>
 </html>
